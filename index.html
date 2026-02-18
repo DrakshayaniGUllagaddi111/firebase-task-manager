@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Registration</title>
+</head>
+<body>
+
+  <h2>Register Student</h2>
+
+  <input type="text" id="name" placeholder="Enter Name"><br><br>
+  <input type="email" id="email" placeholder="Enter Email"><br><br>
+  <input type="password" id="password" placeholder="Enter Password"><br><br>
+
+  <button onclick="register()">Register</button>
+
+  <script type="module">
+
+    // 🔥 Import Firebase SDK (CDN version)
+    import { initializeApp } from 
+    "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+    import { getAuth, createUserWithEmailAndPassword } from 
+    "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    import { getFirestore, collection, addDoc } from 
+    "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // ✅ Your Correct Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCubFA9RltkLqt_BGe3pCBqAYkk8atJtd8",
+      authDomain: "student-app-2-2d638.firebaseapp.com",
+      projectId: "student-app-2-2d638",
+      storageBucket: "student-app-2-2d638.appspot.com",
+      messagingSenderId: "619390180716",
+      appId: "1:619390180716:web:05c1ef5de2ef735f7fe749",
+      measurementId: "G-YGTGOFTQ9V"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Register Function
+    window.register = async function () {
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+
+        // Create user in Firebase Authentication
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+        // Save additional data in Firestore
+        await addDoc(collection(db, "students"), {
+          uid: userCredential.user.uid,
+          name: name,
+          email: email
+        });
+
+        alert("Student Registered Successfully!");
+
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+  </script>
+
+</body>
+</html>
